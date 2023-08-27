@@ -193,7 +193,7 @@ ControllerServer::on_configure(const rclcpp_lifecycle::State & /*state*/)
     "Controller Server has %s controllers available.", controller_ids_concat_.c_str());
 
   odom_sub_ = std::make_unique<nav_2d_utils::OdomSubscriber>(node);
-  vel_publisher_ = create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 1);
+  vel_publisher_ = std::make_unique<nav2_util::TwistPublisher>(node, "cmd_vel", 1);
 
   // Create the action server that we implement with our followPath method
   action_server_ = std::make_unique<ActionServer>(
@@ -488,6 +488,10 @@ void ControllerServer::computeAndPublishVelocity()
       nav_2d_utils::twist2Dto3D(twist),
       goal_checkers_[current_goal_checker_].get());
     last_valid_cmd_time_ = now();
+    cmd_vel_2d.header.frame_id = costmap_ros_->getBaseFrameID();
+    cmd_vel_2d.header.stamp = last_valid_cmd_time_;
+    // Only no valid control exception types are valid to attempt to have control patience, as
+    // other types will not be resolved with more attempts
   } catch (nav2_core::PlannerException & e) {
     if (failure_tolerance_ > 0 || failure_tolerance_ == -1.0) {
       RCLCPP_WARN(this->get_logger(), e.what());
@@ -568,7 +572,7 @@ void ControllerServer::updateGlobalPath()
 
 void ControllerServer::publishVelocity(const geometry_msgs::msg::TwistStamped & velocity)
 {
-  auto cmd_vel = std::make_unique<geometry_msgs::msg::Twist>(velocity.twist);
+  auto cmd_vel = std::make_unique<geometry_msgs::msg::TwistStamped>(velocity);
   if (vel_publisher_->is_activated() && vel_publisher_->get_subscription_count() > 0) {
     vel_publisher_->publish(std::move(cmd_vel));
   }

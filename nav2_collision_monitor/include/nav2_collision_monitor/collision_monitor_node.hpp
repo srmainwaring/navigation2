@@ -21,6 +21,8 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "geometry_msgs/msg/twist.hpp"
+#include "visualization_msgs/msg/marker_array.hpp"
+#include "geometry_msgs/msg/twist_stamped.hpp"
 
 #include "tf2/time.h"
 #include "tf2_ros/buffer.h"
@@ -28,6 +30,9 @@
 
 #include "nav2_util/lifecycle_node.hpp"
 #include "nav2_util/robot_utils.hpp"
+#include "nav2_util/twist_publisher.hpp"
+#include "nav2_util/twist_subscriber.hpp"
+// #include "nav2_msgs/msg/collision_monitor_state.hpp"
 
 #include "nav2_collision_monitor/types.hpp"
 #include "nav2_collision_monitor/polygon.hpp"
@@ -94,13 +99,15 @@ protected:
    * @brief Callback for input cmd_vel
    * @param msg Input cmd_vel message
    */
-  void cmdVelInCallback(geometry_msgs::msg::Twist::ConstSharedPtr msg);
+  void cmdVelInCallbackStamped(geometry_msgs::msg::TwistStamped::SharedPtr msg);
+  void cmdVelInCallbackUnstamped(geometry_msgs::msg::Twist::SharedPtr msg);
   /**
    * @brief Publishes output cmd_vel. If robot was stopped more than stop_pub_timeout_ seconds,
    * quit to publish 0-velocity.
    * @param robot_action Robot action to publish
+   * @param header TwistStamped header to use
    */
-  void publishVelocity(const Action & robot_action);
+  void publishVelocity(const Action & robot_action, const std_msgs::msg::Header & header);
 
   /**
    * @brief Supporting routine obtaining all ROS-parameters
@@ -142,8 +149,9 @@ protected:
   /**
    * @brief Main processing routine
    * @param cmd_vel_in Input desired robot velocity
+   * @param header Twist header
    */
-  void process(const Velocity & cmd_vel_in);
+  void process(const Velocity & cmd_vel_in, const std_msgs::msg::Header & header);
 
   /**
    * @brief Processes the polygon of STOP and SLOWDOWN action type
@@ -200,10 +208,10 @@ protected:
   std::vector<std::shared_ptr<Source>> sources_;
 
   // Input/output speed controls
-  /// @beirf Input cmd_vel subscriber
-  rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_in_sub_;
+  /// @brief Input cmd_vel subscriber
+  std::unique_ptr<nav2_util::TwistSubscriber> cmd_vel_in_sub_;
   /// @brief Output cmd_vel publisher
-  rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_out_pub_;
+  std::unique_ptr<nav2_util::TwistPublisher> cmd_vel_out_pub_;
 
   /// @brief Whether main routine is active
   bool process_active_;

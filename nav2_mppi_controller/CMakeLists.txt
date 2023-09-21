@@ -49,23 +49,23 @@ check_cxx_compiler_flag("-mavx2" COMPILER_SUPPORTS_AVX2)
 check_cxx_compiler_flag("-mfma" COMPILER_SUPPORTS_FMA)
 
 if(COMPILER_SUPPORTS_AVX512)
-  add_compile_options(-mno-avx512f)
+  # add_compile_options(-mno-avx512f)
 endif()
 
 if(COMPILER_SUPPORTS_SSE4)
-  add_compile_options(-msse4.2)
+  # add_compile_options(-msse4.2)
 endif()
 
 if(COMPILER_SUPPORTS_AVX2)
-  add_compile_options(-mavx2)
+  # add_compile_options(-mavx2)
 endif()
 
 if(COMPILER_SUPPORTS_FMA)
-  add_compile_options(-mfma)
+  # add_compile_options(-mfma)
 endif()
 
-# If building one the same hardware to be deployed on, try `-march=native`!
-add_compile_options(-O3 -finline-limit=10000000 -ffp-contract=fast -ffast-math -mtune=generic)
+# add_compile_options(-O3 -finline-limit=1000000 -ffp-contract=fast -ffast-math)
+add_compile_options(-O3 -ffp-contract=fast -ffast-math)
 
 add_library(mppi_controller SHARED
   src/controller.cpp
@@ -93,8 +93,8 @@ add_library(mppi_critics SHARED
 set(libraries mppi_controller mppi_critics)
 
 foreach(lib IN LISTS libraries)
-  target_compile_options(${lib} PUBLIC -fconcepts)
-  target_include_directories(${lib} PUBLIC ${xsimd_INCLUDE_DIRS})  #  ${OpenMP_INCLUDE_DIRS}
+  # target_compile_options(${lib} PUBLIC -fconcepts)
+  target_include_directories(${lib} PUBLIC include ${xsimd_INCLUDE_DIRS})  #  ${OpenMP_INCLUDE_DIRS}
   target_link_libraries(${lib} xtensor xtensor::optimize xtensor::use_xsimd)
   ament_target_dependencies(${lib} ${dependencies_pkgs})
 endforeach()

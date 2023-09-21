@@ -11,7 +11,7 @@ ament_target_dependencies(order_layer
   ${dependencies}
 )
 target_link_libraries(order_layer
-  ${PROJECT_NAME}::nav2_costmap_2d_core
+  nav2_costmap_2d_core
 )
 install(TARGETS
   order_layer

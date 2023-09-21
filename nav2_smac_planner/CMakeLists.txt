@@ -25,6 +25,9 @@ find_package(angles REQUIRED)
 find_package(ompl REQUIRED)
 find_package(OpenMP REQUIRED)
 
+# TODO: macOS - use pkgconfig to locate...
+link_directories("/opt/homebrew/opt/ode/lib")
+
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 17)
 endif()

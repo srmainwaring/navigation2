@@ -28,6 +28,13 @@ if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 17)
 endif()
 
+# TODO: macOS - use pkgconfig to locate...
+link_directories("/opt/homebrew/opt/ode/lib")
+
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 17)
+endif()
+
 if(MSVC)
   add_compile_definitions(_USE_MATH_DEFINES)
 else()

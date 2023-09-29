@@ -61,7 +61,7 @@ if(COMPILER_SUPPORTS_AVX2)
 endif()
 
 if(COMPILER_SUPPORTS_FMA)
-  add_compile_options(-mfma)
+  # add_compile_options(-mfma)
 endif()
 
 # If building one the same hardware to be deployed on, try `-march=native`!
@@ -90,15 +90,43 @@ add_library(mppi_critics SHARED
   src/critics/constraint_critic.cpp
   src/critics/velocity_deadband_critic.cpp
 )
+# target_compile_options(mppi_critics PUBLIC -fconcepts -O3 -finline-limit=10000000 -ffp-contract=fast -ffast-math -mtune=generic)
+target_compile_options(-O3 -ffp-contract=fast -ffast-math)
+target_include_directories(mppi_critics
+  PUBLIC
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+    "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>")
+target_link_libraries(mppi_critics PUBLIC
+  angles::angles
+  ${geometry_msgs_TARGETS}
+  nav2_core::nav2_core
+  nav2_costmap_2d::layers
+  nav2_costmap_2d::nav2_costmap_2d_core
+  ${nav_msgs_TARGETS}
+  rclcpp::rclcpp
+  rclcpp_lifecycle::rclcpp_lifecycle
+  ${std_msgs_TARGETS}
+  tf2::tf2
+  tf2_geometry_msgs::tf2_geometry_msgs
+  tf2_ros::tf2_ros
+  ${visualization_msgs_TARGETS}
+)
+target_link_libraries(mppi_critics PRIVATE
+  pluginlib::pluginlib
+)
 
-set(libraries mppi_controller mppi_critics)
+# set(libraries mppi_controller mppi_critics)
 
-foreach(lib IN LISTS libraries)
-  target_compile_options(${lib} PUBLIC -fconcepts)
-  target_include_directories(${lib} PUBLIC ${xsimd_INCLUDE_DIRS})  #  ${OpenMP_INCLUDE_DIRS}
-  target_link_libraries(${lib} xtensor xtensor::optimize xtensor::use_xsimd)
-  ament_target_dependencies(${lib} ${dependencies_pkgs})
-endforeach()
+# foreach(lib IN LISTS libraries)
+#   # target_compile_options(${lib} PUBLIC -fconcepts)
+#   target_include_directories(${lib} PUBLIC include ${xsimd_INCLUDE_DIRS} ${OpenMP_INCLUDE_DIRS})
+#   target_link_libraries(${lib}
+#     xtensor
+#     xtensor::optimize
+#     # xtensor::use_xsimd
+#   )
+#   ament_target_dependencies(${lib} ${dependencies_pkgs})
+# endforeach()
 
 install(TARGETS mppi_controller mppi_critics
   ARCHIVE DESTINATION lib

@@ -19,6 +19,8 @@ find_package(yaml-cpp REQUIRED)
 
 find_package(yaml-cpp REQUIRED)
 
+find_package(yaml-cpp REQUIRED)
+
 nav2_package()
 
 include_directories(include)

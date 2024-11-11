@@ -16,11 +16,15 @@
 #define NAV2_MPPI_CONTROLLER__MODELS__PATH_HPP_
 
 // xtensor creates warnings that needs to be ignored as we are building with -Werror
+#ifdef __APPLE_
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Warray-bounds"
 #pragma GCC diagnostic ignored "-Wstringop-overflow"
+#endif
 #include <xtensor/xtensor.hpp>
+#ifdef __APPLE_
 #pragma GCC diagnostic pop
+#endif
 
 namespace mppi::models
 {

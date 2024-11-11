@@ -22,15 +22,19 @@
 #include "nav2_mppi_controller/models/state.hpp"
 #include "nav2_mppi_controller/models/constraints.hpp"
 
+#ifndef __APPLE__
 // xtensor creates warnings that needs to be ignored as we are building with -Werror
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Warray-bounds"
 #pragma GCC diagnostic ignored "-Wstringop-overflow"
+#endif
 #include <xtensor/xmath.hpp>
 #include <xtensor/xmasked_view.hpp>
 #include <xtensor/xview.hpp>
 #include <xtensor/xnoalias.hpp>
+#ifndef __APPLE__
 #pragma GCC diagnostic pop
+#endif
 
 #include "nav2_mppi_controller/tools/parameters_handler.hpp"
 

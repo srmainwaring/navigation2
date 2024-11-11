@@ -345,7 +345,7 @@ void Optimizer::integrateStateVelocities(
   const float initial_yaw = static_cast<float>(tf2::getYaw(state.pose.pose.orientation));
 
   xt::noalias(trajectories.yaws) =
-    xt::cumsum(state.wz * settings_.model_dt, {1}) + initial_yaw;
+    xt::cumsum(state.wz * settings_.model_dt, 1) + initial_yaw;
 
   auto yaw_cos = xt::roll(xt::eval(xt::cos(trajectories.yaws)), 1, 1);
   auto yaw_sin = xt::roll(xt::eval(xt::sin(trajectories.yaws)), 1, 1);
@@ -361,9 +361,9 @@ void Optimizer::integrateStateVelocities(
   }
 
   xt::noalias(trajectories.x) = state.pose.pose.position.x +
-    xt::cumsum(dx * settings_.model_dt, {1});
+    xt::cumsum(dx * settings_.model_dt, 1);
   xt::noalias(trajectories.y) = state.pose.pose.position.y +
-    xt::cumsum(dy * settings_.model_dt, {1});
+    xt::cumsum(dy * settings_.model_dt, 1);
 }
 
 xt::xtensor<float, 2> Optimizer::getOptimizedTrajectory()

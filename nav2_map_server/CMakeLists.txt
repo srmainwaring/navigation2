@@ -53,6 +53,9 @@ target_link_libraries(${map_io_library_name} PRIVATE
   tf2::tf2
   yaml-cpp::yaml-cpp
 )
+target_compile_options(${map_io_library_name} PRIVATE
+  -Wno-error
+)
 
 add_library(${library_name} SHARED
   src/map_server/map_server.cpp
@@ -75,6 +78,9 @@ target_link_libraries(${library_name} PRIVATE
   rclcpp_components::component
   yaml-cpp::yaml-cpp
 )
+target_compile_options(${library_name} PRIVATE
+  -Wno-error
+)
 
 add_executable(${map_server_executable}
   src/map_server/main.cpp)
@@ -86,6 +92,9 @@ target_link_libraries(${map_server_executable} PRIVATE
   ${library_name}
   ${map_io_library_name}
   rclcpp::rclcpp
+)
+target_compile_options(${map_server_executable} PRIVATE
+  -Wno-error
 )
 
 add_executable(${map_saver_cli_executable}
@@ -103,6 +112,9 @@ target_link_libraries(${map_saver_cli_executable} PRIVATE
   rclcpp::rclcpp
   rclcpp_lifecycle::rclcpp_lifecycle
 )
+target_compile_options(${map_saver_cli_executable} PRIVATE
+  -Wno-error
+)
 
 add_executable(${map_saver_server_executable}
   src/map_saver/main_server.cpp)
@@ -119,6 +131,9 @@ target_link_libraries(${map_saver_server_executable} PRIVATE
   rclcpp::rclcpp
   rclcpp_lifecycle::rclcpp_lifecycle
 )
+target_compile_options(${map_saver_server_executable} PRIVATE
+  -Wno-error
+)
 
 add_executable(${costmap_filter_info_server_executable}
   src/costmap_filter_info/main.cpp)
@@ -134,6 +149,9 @@ target_link_libraries(${costmap_filter_info_server_executable} PRIVATE
   nav2_util::nav2_util_core
   rclcpp::rclcpp
   rclcpp_lifecycle::rclcpp_lifecycle
+)
+target_compile_options(${costmap_filter_info_server_executable} PRIVATE
+  -Wno-error
 )
 
 rclcpp_components_register_nodes(${library_name} "nav2_map_server::CostmapFilterInfoServer")

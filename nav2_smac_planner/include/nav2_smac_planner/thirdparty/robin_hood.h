@@ -1441,8 +1441,11 @@ private:
                                 mKeyVals, reinterpret_cast_no_cast_align_warning<Node*>(mInfo)));
     }
 
+    // void cloneData(const Table& o) {
+    //     Cloner<Table, IsFlat && ROBIN_HOOD_IS_TRIVIALLY_COPYABLE(Node)>()(o, *this);
+    // }
     void cloneData(const Table& o) {
-        Cloner<Table, IsFlat && ROBIN_HOOD_IS_TRIVIALLY_COPYABLE(Node)>()(o, *this);
+        Cloner<Table, IsFlat && __is_trivially_copyable(Node)>()(o, *this);
     }
 
     // inserts a keyval that is guaranteed to be new, e.g. when the hashmap is resized.

@@ -20,6 +20,14 @@ find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(visualization_msgs REQUIRED)
 
+set(LIBOMPL_INCLUDE_DIRS
+  "/opt/homebrew/opt/libomp/include"
+)
+
+set(LIBOMPL_LIBRARIES
+  "/opt/homebrew/opt/libomp/lib/libomp.dylib" 
+)
+
 nav2_package()
 
 # TODO: macOS - use pkgconfig to locate...
@@ -54,6 +62,7 @@ target_include_directories(${library_name}_common
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
     "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
     ${OMPL_INCLUDE_DIRS}
+    ${LIBOMPL_INCLUDE_DIRS}
 )
 target_link_libraries(${library_name}_common PUBLIC
   ${geometry_msgs_TARGETS}
@@ -63,6 +72,7 @@ target_link_libraries(${library_name}_common PUBLIC
   ${nav_msgs_TARGETS}
   nlohmann_json::nlohmann_json
   ${OMPL_LIBRARIES}
+  ${LIBOMPL_LIBRARIES}
   rclcpp::rclcpp
   rclcpp_lifecycle::rclcpp_lifecycle
   tf2::tf2
@@ -71,6 +81,12 @@ target_link_libraries(${library_name}_common PUBLIC
 target_link_libraries(${library_name}_common PRIVATE
   angles::angles
 )
+if(APPLE)
+  target_compile_options(${library_name}_common PRIVATE
+    -Wno-gnu-zero-variadic-macro-arguments
+    -Wno-deprecated-copy-with-user-provided-dtor
+  )
+endif()
 
 # Hybrid plugin
 add_library(${library_name} SHARED
@@ -80,7 +96,8 @@ target_include_directories(${library_name}
   PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
     "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
-    ${OMPL_INCLUDE_DIRS}
+    # ${OMPL_INCLUDE_DIRS}
+    ${LIBOMPL_INCLUDE_DIRS}
 )
 target_link_libraries(${library_name} PUBLIC
   ${library_name}_common
@@ -89,7 +106,8 @@ target_link_libraries(${library_name} PUBLIC
   nav2_costmap_2d::nav2_costmap_2d_core
   ${nav_msgs_TARGETS}
   nlohmann_json::nlohmann_json
-  ${OMPL_LIBRARIES}
+  # ${OMPL_LIBRARIES}
+  ${LIBOMPL_LIBRARIES}
   rclcpp::rclcpp
   rclcpp_lifecycle::rclcpp_lifecycle
   ${rcl_interfaces_TARGETS}
@@ -100,6 +118,11 @@ target_link_libraries(${library_name} PUBLIC
 target_link_libraries(${library_name} PRIVATE
   pluginlib::pluginlib
 )
+if(APPLE)
+  target_compile_options(${library_name} PRIVATE
+    -Wno-gnu-zero-variadic-macro-arguments
+  )
+endif()
 
 # 2D plugin
 add_library(${library_name}_2d SHARED
@@ -109,7 +132,8 @@ target_include_directories(${library_name}_2d
   PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
     "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
-    ${OMPL_INCLUDE_DIRS}
+    # ${OMPL_INCLUDE_DIRS}
+    ${LIBOMPL_INCLUDE_DIRS}
 )
 target_link_libraries(${library_name}_2d PUBLIC
   ${library_name}_common
@@ -118,7 +142,8 @@ target_link_libraries(${library_name}_2d PUBLIC
   nav2_costmap_2d::nav2_costmap_2d_core
   ${nav_msgs_TARGETS}
   nlohmann_json::nlohmann_json
-  ${OMPL_LIBRARIES}
+  # ${OMPL_LIBRARIES}
+  ${LIBOMPL_LIBRARIES}
   rclcpp::rclcpp
   rclcpp_lifecycle::rclcpp_lifecycle
   ${rcl_interfaces_TARGETS}
@@ -129,6 +154,11 @@ target_link_libraries(${library_name}_2d PUBLIC
 target_link_libraries(${library_name}_2d PRIVATE
   pluginlib::pluginlib
 )
+if(APPLE)
+  target_compile_options(${library_name}_2d PRIVATE
+    -Wno-gnu-zero-variadic-macro-arguments
+  )
+endif()
 
 # Lattice plugin
 add_library(${library_name}_lattice SHARED
@@ -138,7 +168,8 @@ target_include_directories(${library_name}_lattice
   PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
     "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
-    ${OMPL_INCLUDE_DIRS}
+    # ${OMPL_INCLUDE_DIRS}
+    ${LIBOMPL_INCLUDE_DIRS}
 )
 target_link_libraries(${library_name}_lattice PUBLIC
   ${library_name}_common
@@ -147,7 +178,8 @@ target_link_libraries(${library_name}_lattice PUBLIC
   nav2_costmap_2d::nav2_costmap_2d_core
   ${nav_msgs_TARGETS}
   nlohmann_json::nlohmann_json
-  ${OMPL_LIBRARIES}
+  # ${OMPL_LIBRARIES}
+  ${LIBOMPL_LIBRARIES}
   rclcpp::rclcpp
   rclcpp_lifecycle::rclcpp_lifecycle
   ${rcl_interfaces_TARGETS}
@@ -159,6 +191,11 @@ target_link_libraries(${library_name}_lattice PRIVATE
   ament_index_cpp::ament_index_cpp
   pluginlib::pluginlib
 )
+if(APPLE)
+  target_compile_options(${library_name}_lattice PRIVATE
+    -Wno-gnu-zero-variadic-macro-arguments
+  )
+endif()
 
 pluginlib_export_plugin_description_file(nav2_core smac_plugin_hybrid.xml)
 pluginlib_export_plugin_description_file(nav2_core smac_plugin_2d.xml)

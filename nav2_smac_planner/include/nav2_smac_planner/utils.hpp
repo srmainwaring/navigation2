@@ -75,7 +75,7 @@ inline geometry_msgs::msg::Quaternion getWorldOrientation(
 inline double findCircumscribedCost(std::shared_ptr<nav2_costmap_2d::Costmap2DROS> costmap)
 {
   double result = -1.0;
-  std::vector<std::shared_ptr<nav2_costmap_2d::Layer>>::iterator layer;
+  // std::vector<std::shared_ptr<nav2_costmap_2d::Layer>>::iterator layer;
 
   // check if the costmap has an inflation layer
   const auto inflation_layer = nav2_costmap_2d::InflationLayer::getInflationLayer(costmap);

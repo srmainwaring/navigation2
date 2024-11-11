@@ -91,7 +91,7 @@ add_library(mppi_critics SHARED
   src/critics/velocity_deadband_critic.cpp
 )
 # target_compile_options(mppi_critics PUBLIC -fconcepts -O3 -finline-limit=10000000 -ffp-contract=fast -ffast-math -mtune=generic)
-target_compile_options(-O3 -ffp-contract=fast -ffast-math)
+target_compile_options(mppi_critics PUBLIC -O3 -ffp-contract=fast -ffast-math)
 target_include_directories(mppi_critics
   PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"

@@ -37,11 +37,11 @@ check_cxx_compiler_flag("-mavx2" COMPILER_SUPPORTS_AVX2)
 check_cxx_compiler_flag("-mfma" COMPILER_SUPPORTS_FMA)
 
 if(COMPILER_SUPPORTS_AVX512)
-  add_compile_options(-mno-avx512f)
+  # add_compile_options(-mno-avx512f)
 endif()
 
 if(COMPILER_SUPPORTS_SSE4)
-  add_compile_options(-msse4.2)
+  # add_compile_options(-msse4.2)
 endif()
 
 if(COMPILER_SUPPORTS_AVX2)
@@ -63,7 +63,8 @@ add_library(mppi_controller SHARED
   src/path_handler.cpp
   src/trajectory_visualizer.cpp
 )
-target_compile_options(mppi_controller PUBLIC -fconcepts -O3 -finline-limit=10000000 -ffp-contract=fast -ffast-math -mtune=generic)
+# target_compile_options(mppi_controller PUBLIC -fconcepts -O3 -finline-limit=10000000 -ffp-contract=fast -ffast-math -mtune=generic)
+target_compile_options(mppi_controller PUBLIC -O3 -ffp-contract=fast -ffast-math)
 target_include_directories(mppi_controller
   PUBLIC
     ${xsimd_INCLUDE_DIRS}
@@ -103,7 +104,7 @@ add_library(mppi_critics SHARED
   src/critics/velocity_deadband_critic.cpp
 )
 # target_compile_options(mppi_critics PUBLIC -fconcepts -O3 -finline-limit=10000000 -ffp-contract=fast -ffast-math -mtune=generic)
-target_compile_options(-O3 -ffp-contract=fast -ffast-math)
+target_compile_options(mppi_critics PUBLIC -O3 -ffp-contract=fast -ffast-math)
 target_include_directories(mppi_critics
   PUBLIC
     ${xsimd_INCLUDE_DIRS}

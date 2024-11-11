@@ -21,13 +21,17 @@
 #include <mutex>
 #include <condition_variable>
 
+#ifndef __APPLE__
 // xtensor creates warnings that needs to be ignored as we are building with -Werror
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Warray-bounds"
 #pragma GCC diagnostic ignored "-Wstringop-overflow"
+#endif
 #include <xtensor/xtensor.hpp>
 #include <xtensor/xview.hpp>
+#ifndef __APPLE__
 #pragma GCC diagnostic pop
+#endif
 
 #include "nav2_mppi_controller/models/optimizer_settings.hpp"
 #include "nav2_mppi_controller/tools/parameters_handler.hpp"

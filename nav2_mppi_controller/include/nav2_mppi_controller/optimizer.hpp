@@ -19,12 +19,16 @@
 #include <memory>
 
 // xtensor creates warnings that needs to be ignored as we are building with -Werror
+#ifndef __APPLE__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Warray-bounds"
 #pragma GCC diagnostic ignored "-Wstringop-overflow"
+#endif
 #include <xtensor/xtensor.hpp>
 #include <xtensor/xview.hpp>
+#ifndef __APPLE__
 #pragma GCC diagnostic pop
+#endif
 
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 

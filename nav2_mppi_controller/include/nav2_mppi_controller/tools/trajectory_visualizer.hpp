@@ -18,12 +18,16 @@
 #include <memory>
 #include <string>
 
+#ifndef __APPLE__
 // xtensor creates warnings that needs to be ignored as we are building with -Werror
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Warray-bounds"
 #pragma GCC diagnostic ignored "-Wstringop-overflow"
+#endif
 #include <xtensor/xtensor.hpp>
+#ifndef __APPLE__
 #pragma GCC diagnostic pop
+#endif
 
 #include "nav_msgs/msg/path.hpp"
 #include "rclcpp/rclcpp.hpp"

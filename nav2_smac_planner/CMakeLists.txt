@@ -29,17 +29,20 @@ if(NOT CMAKE_CXX_STANDARD)
 endif()
 
 set(LIBOMPL_INCLUDE_DIRS
-  "/opt/homebrew/opt/libomp/include"
+  # "/opt/homebrew/opt/libomp/include"
+  "/usr/local/opt/libomp/include"
 )
 
 set(LIBOMPL_LIBRARIES
-  "/opt/homebrew/opt/libomp/lib/libomp.dylib" 
+  # "/opt/homebrew/opt/libomp/lib/libomp.dylib" 
+  "/usr/local/opt/libomp/lib/libomp.dylib" 
 )
 
 # nav2_package()
 
 # TODO: macOS - use pkgconfig to locate...
-link_directories("/opt/homebrew/opt/ode/lib")
+# link_directories("/opt/homebrew/opt/ode/lib")
+link_directories("/usr/local/opt/ode/lib")
 
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 17)

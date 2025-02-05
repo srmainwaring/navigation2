@@ -18,6 +18,8 @@
 // QT
 #include <QtWidgets>
 #include <QBasicTimer>
+#include <QSignalTransition>
+#include <QStateMachine>
 
 #include <string>
 
@@ -55,7 +57,7 @@ public:
 
 private Q_SLOTS:
   void startThread();
-  void onStartup();
+  // void onStartup();
   void onDockingButtonPressed();
   void onUndockingButtonPressed();
   void onCancelDocking();

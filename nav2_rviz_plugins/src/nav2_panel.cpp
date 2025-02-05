@@ -19,6 +19,7 @@
 #include <QHBoxLayout>
 #include <QTextEdit>
 #include <QCheckBox>
+#include <QSignalTransition>
 
 #include <ctype.h>
 #include <memory>
@@ -858,12 +859,12 @@ Nav2Panel::startThread()
 void
 Nav2Panel::onPause()
 {
-  QFuture<void> futureNav =
+  QFuture<bool> futureNav =
     QtConcurrent::run(
     std::bind(
       &nav2_lifecycle_manager::LifecycleManagerClient::pause,
       client_nav_.get(), std::placeholders::_1), server_timeout_);
-  QFuture<void> futureLoc =
+  QFuture<bool> futureLoc =
     QtConcurrent::run(
     std::bind(
       &nav2_lifecycle_manager::LifecycleManagerClient::pause,
@@ -873,12 +874,12 @@ Nav2Panel::onPause()
 void
 Nav2Panel::onResume()
 {
-  QFuture<void> futureNav =
+  QFuture<bool> futureNav =
     QtConcurrent::run(
     std::bind(
       &nav2_lifecycle_manager::LifecycleManagerClient::resume,
       client_nav_.get(), std::placeholders::_1), server_timeout_);
-  QFuture<void> futureLoc =
+  QFuture<bool> futureLoc =
     QtConcurrent::run(
     std::bind(
       &nav2_lifecycle_manager::LifecycleManagerClient::resume,
@@ -888,12 +889,12 @@ Nav2Panel::onResume()
 void
 Nav2Panel::onStartup()
 {
-  QFuture<void> futureNav =
+  QFuture<bool> futureNav =
     QtConcurrent::run(
     std::bind(
       &nav2_lifecycle_manager::LifecycleManagerClient::startup,
       client_nav_.get(), std::placeholders::_1), server_timeout_);
-  QFuture<void> futureLoc =
+  QFuture<bool> futureLoc =
     QtConcurrent::run(
     std::bind(
       &nav2_lifecycle_manager::LifecycleManagerClient::startup,
@@ -903,12 +904,12 @@ Nav2Panel::onStartup()
 void
 Nav2Panel::onShutdown()
 {
-  QFuture<void> futureNav =
+  QFuture<bool> futureNav =
     QtConcurrent::run(
     std::bind(
       &nav2_lifecycle_manager::LifecycleManagerClient::reset,
       client_nav_.get(), std::placeholders::_1), server_timeout_);
-  QFuture<void> futureLoc =
+  QFuture<bool> futureLoc =
     QtConcurrent::run(
     std::bind(
       &nav2_lifecycle_manager::LifecycleManagerClient::reset,

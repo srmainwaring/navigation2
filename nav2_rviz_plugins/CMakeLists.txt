@@ -10,7 +10,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic -Werror)
 endif()
 
-# Qt5 boilerplate options from http://doc.qt.io/qt-5/cmake-manual.html
+# Qt6 boilerplate options from http://doc.qt.io/qt-6/cmake-manual.html
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
@@ -22,7 +22,7 @@ find_package(nav2_lifecycle_manager REQUIRED)
 find_package(nav2_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(pluginlib REQUIRED)
-find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Test Concurrent)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Test Concurrent StateMachine)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(rviz_common REQUIRED)
@@ -78,7 +78,6 @@ set(dependencies
   nav2_msgs
   nav_msgs
   pluginlib
-  Qt5
   rclcpp
   rclcpp_lifecycle
   rviz_common
@@ -95,7 +94,7 @@ ament_target_dependencies(${library_name}
 )
 
 target_include_directories(${library_name} PUBLIC
-  ${Qt5Widgets_INCLUDE_DIRS}
+  ${Qt6Widgets_INCLUDE_DIRS}
   ${OGRE_INCLUDE_DIRS}
   ${nav2_route_INCLUDE_DIRS}
 )
@@ -103,6 +102,12 @@ target_include_directories(${library_name} PUBLIC
 target_link_libraries(${library_name}
   rviz_common::rviz_common
   nav2_route::route_server_core
+  Qt6::Core
+  Qt6::Gui
+  Qt6::Widgets
+  Qt6::Test
+  Qt6::Concurrent
+  Qt6::StateMachine
 )
 
 # Causes the visibility macros to use dllexport rather than dllimport,
@@ -143,7 +148,12 @@ endif()
 ament_export_include_directories(include)
 ament_export_targets(${library_name} HAS_LIBRARY_TARGET)
 ament_export_dependencies(
-  Qt5
+  Qt6::Core
+  Qt6::Gui
+  Qt6::Widgets
+  Qt6::Test
+  Qt6::Concurrent
+  Qt6::StateMachine
   rviz_common
   geometry_msgs
   map_msgs

@@ -58,48 +58,24 @@ include_directories(
 
 set(library_name nav2_smac_planner)
 
-# Common library
-add_library(${library_name}_common SHARED
-  src/a_star.cpp
-  src/analytic_expansion.cpp
-  src/collision_checker.cpp
-  src/costmap_downsampler.cpp
-  src/node_2d.cpp
-  src/node_basic.cpp
-  src/node_hybrid.cpp
-  src/node_lattice.cpp
-  src/smoother.cpp
+set(dependencies
+  rclcpp
+  rclcpp_action
+  rclcpp_lifecycle
+  std_msgs
+  visualization_msgs
+  nav2_util
+  nav2_msgs
+  nav_msgs
+  geometry_msgs
+  builtin_interfaces
+  tf2_ros
+  nav2_costmap_2d
+  nav2_core
+  pluginlib
+  angles
+  eigen3_cmake_module
 )
-target_include_directories(${library_name}_common
-  PUBLIC
-    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-    "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
-    ${OMPL_INCLUDE_DIRS}
-    ${LIBOMPL_INCLUDE_DIRS}
-)
-target_link_libraries(${library_name}_common PUBLIC
-  ${geometry_msgs_TARGETS}
-  nav2_core::nav2_core
-  nav2_costmap_2d::layers
-  nav2_costmap_2d::nav2_costmap_2d_core
-  ${nav_msgs_TARGETS}
-  nlohmann_json::nlohmann_json
-  ${OMPL_LIBRARIES}
-  ${LIBOMPL_LIBRARIES}
-  rclcpp::rclcpp
-  rclcpp_lifecycle::rclcpp_lifecycle
-  tf2::tf2
-  ${visualization_msgs_TARGETS}
-)
-target_link_libraries(${library_name}_common PRIVATE
-  angles::angles
-)
-if(APPLE)
-  target_compile_options(${library_name}_common PRIVATE
-    -Wno-gnu-zero-variadic-macro-arguments
-    -Wno-deprecated-copy-with-user-provided-dtor
-  )
-endif()
 
 # Hybrid plugin
 add_library(${library_name} SHARED
@@ -114,37 +90,13 @@ add_library(${library_name} SHARED
   src/node_2d.cpp
   src/node_basic.cpp
 )
-target_include_directories(${library_name}
-  PUBLIC
-    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-    "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
-    # ${OMPL_INCLUDE_DIRS}
-    ${LIBOMPL_INCLUDE_DIRS}
+
+target_link_libraries(${library_name} ${OMPL_LIBRARIES})
+target_include_directories(${library_name} PUBLIC ${Eigen3_INCLUDE_DIRS})
+
+ament_target_dependencies(${library_name}
+  ${dependencies}
 )
-target_link_libraries(${library_name} PUBLIC
-  ${library_name}_common
-  ${geometry_msgs_TARGETS}
-  nav2_core::nav2_core
-  nav2_costmap_2d::nav2_costmap_2d_core
-  ${nav_msgs_TARGETS}
-  nlohmann_json::nlohmann_json
-  # ${OMPL_LIBRARIES}
-  ${LIBOMPL_LIBRARIES}
-  rclcpp::rclcpp
-  rclcpp_lifecycle::rclcpp_lifecycle
-  ${rcl_interfaces_TARGETS}
-  tf2::tf2
-  tf2_ros::tf2_ros
-  ${visualization_msgs_TARGETS}
-)
-target_link_libraries(${library_name} PRIVATE
-  pluginlib::pluginlib
-)
-if(APPLE)
-  target_compile_options(${library_name} PRIVATE
-    -Wno-gnu-zero-variadic-macro-arguments
-  )
-endif()
 
 # 2D plugin
 add_library(${library_name}_2d SHARED
@@ -159,37 +111,13 @@ add_library(${library_name}_2d SHARED
   src/node_2d.cpp
   src/node_basic.cpp
 )
-target_include_directories(${library_name}_2d
-  PUBLIC
-    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-    "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
-    # ${OMPL_INCLUDE_DIRS}
-    ${LIBOMPL_INCLUDE_DIRS}
+
+target_link_libraries(${library_name}_2d ${OMPL_LIBRARIES})
+target_include_directories(${library_name}_2d PUBLIC ${Eigen3_INCLUDE_DIRS})
+
+ament_target_dependencies(${library_name}_2d
+  ${dependencies}
 )
-target_link_libraries(${library_name}_2d PUBLIC
-  ${library_name}_common
-  ${geometry_msgs_TARGETS}
-  nav2_core::nav2_core
-  nav2_costmap_2d::nav2_costmap_2d_core
-  ${nav_msgs_TARGETS}
-  nlohmann_json::nlohmann_json
-  # ${OMPL_LIBRARIES}
-  ${LIBOMPL_LIBRARIES}
-  rclcpp::rclcpp
-  rclcpp_lifecycle::rclcpp_lifecycle
-  ${rcl_interfaces_TARGETS}
-  tf2::tf2
-  tf2_ros::tf2_ros
-  ${visualization_msgs_TARGETS}
-)
-target_link_libraries(${library_name}_2d PRIVATE
-  pluginlib::pluginlib
-)
-if(APPLE)
-  target_compile_options(${library_name}_2d PRIVATE
-    -Wno-gnu-zero-variadic-macro-arguments
-  )
-endif()
 
 # Lattice plugin
 add_library(${library_name}_lattice SHARED
@@ -204,38 +132,13 @@ add_library(${library_name}_lattice SHARED
   src/node_2d.cpp
   src/node_basic.cpp
 )
-target_include_directories(${library_name}_lattice
-  PUBLIC
-    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-    "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
-    # ${OMPL_INCLUDE_DIRS}
-    ${LIBOMPL_INCLUDE_DIRS}
+
+target_link_libraries(${library_name}_lattice ${OMPL_LIBRARIES})
+target_include_directories(${library_name}_lattice PUBLIC ${Eigen3_INCLUDE_DIRS})
+
+ament_target_dependencies(${library_name}_lattice
+  ${dependencies}
 )
-target_link_libraries(${library_name}_lattice PUBLIC
-  ${library_name}_common
-  ${geometry_msgs_TARGETS}
-  nav2_core::nav2_core
-  nav2_costmap_2d::nav2_costmap_2d_core
-  ${nav_msgs_TARGETS}
-  nlohmann_json::nlohmann_json
-  # ${OMPL_LIBRARIES}
-  ${LIBOMPL_LIBRARIES}
-  rclcpp::rclcpp
-  rclcpp_lifecycle::rclcpp_lifecycle
-  ${rcl_interfaces_TARGETS}
-  tf2::tf2
-  tf2_ros::tf2_ros
-  ${visualization_msgs_TARGETS}
-)
-target_link_libraries(${library_name}_lattice PRIVATE
-  ament_index_cpp::ament_index_cpp
-  pluginlib::pluginlib
-)
-if(APPLE)
-  target_compile_options(${library_name}_lattice PRIVATE
-    -Wno-gnu-zero-variadic-macro-arguments
-  )
-endif()
 
 pluginlib_export_plugin_description_file(nav2_core smac_plugin_hybrid.xml)
 pluginlib_export_plugin_description_file(nav2_core smac_plugin_2d.xml)
